@@ -729,8 +729,7 @@
 }
 
 .bg-gradient-black {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.40) 100%), linear-gradient(0deg, var(--black-20) 0%, var(--black-20) 100%), var(--black-100);
-  background-blend-mode: normal, overlay, multiply;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.40) 100%), linear-gradient(0deg, var(--static-white-20) 0%, var(--static-white-20) 100%), var(--static-black-100);
   --hover-opacity: 20%;
 }
 
