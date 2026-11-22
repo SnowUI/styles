@@ -2,250 +2,212 @@
 
 [View English Documentation](./SNOWUI_USAGE.md)
 
-所有类名均可直接用于 JSX/HTML；数值后缀表示 16px 根字号基准下的名义 px 值（如 `p-12` = 12px）。
+所有类名可直接用于 HTML、Svelte 或 JSX。数值后缀表示 `16px` 根字号基准下的名义 px 值（如 `p-12` = `0.75rem`，在 `16px` 根字号下为 `12px`）。
 
-Padding、Gap 与普通圆角工具类使用 rem。数值后缀表示 16px 根字号下的名义 px 值；引入 `snowui-base.css` 后，计算值会随其 14px–16px 响应式根字号平滑缩放。响应式前缀只切换明确声明的语义档位，`.rounded-full` 仍是语义性 `9999px` 例外。
+引入 `snowui-base.css` 后，基于 rem 的字号、边框宽度、尺寸、内外边距、Gap、定位偏移与普通圆角工具类会随 `14px–16px` 响应式根字号平滑缩放；`rounded-full` 保持语义性 `9999px` 例外。
 
-## 响应式工具类（可选入口）
+## 样式入口与响应式工具类
 
-额外引入 `@snowui-design-system/styles/responsive` 或 `snowui-responsive.css` 后，可使用 mobile-first 前缀：`sm:` 640px、`md:` 768px、`lg:` 1024px、`xl:` 1280px、`2xl:` 1536px。
+| 包导出 | 文件 | 作用范围 |
+| --- | --- | --- |
+| `@snowui-design-system/styles` | `snowui.css` | 默认全量入口（`base` + `utilities` + `themes` + `extra`） |
+| `@snowui-design-system/styles/base` | `snowui-base.css` | 浏览器初始化、响应式根字号、原生滚动条、应用根隔离 |
+| `@snowui-design-system/styles/themes` | `snowui-themes.css` | 明暗主题变量与色阶 Token |
+| `@snowui-design-system/styles/utilities` | `snowui-utilities.css` | 本文档列出的全部静态工具类 |
+| `@snowui-design-system/styles/responsive` | `snowui-responsive.css` | 可选 mobile-first 响应式断点工具类 |
+| `@snowui-design-system/styles/extra` | `snowui-extra.css` | 补充扩展样式入口 |
+
+额外引入 `@snowui-design-system/styles/responsive`（或 `snowui-responsive.css`）即可启用 mobile-first 前缀：`sm:`（`640px`）、`md:`（`768px`）、`lg:`（`1024px`）、`xl:`（`1280px`）、`2xl:`（`1536px`）。
 
 ```html
 <div class="grid grid-cols-1 gap-8 p-8 md:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:p-24"></div>
 ```
 
-第一阶段 allowlist：Display、Flexbox、`grid-cols-*`、`col-span-*`、Alignment、Gap、`p/px/py`、布局尺寸、Overflow/Whitespace。静态 Margin 可继续使用，但不生成响应式 Margin；颜色、边框、渐变、阴影、毛玻璃、opacity、cursor、resize/select、hover/focus、Position/Inset/Z-index、Typography 也不生成响应式矩阵。
+第一阶段响应式 allowlist（`scripts/generate-responsive-utilities.mjs`）：
+- **Display**：`block`、`inline-block`、`inline`、`flex`、`inline-flex`、`grid`、`inline-grid`、`hidden`
+- **Flexbox**：`flex-row`、`flex-row-reverse`、`flex-col`、`flex-col-reverse`、`flex-wrap`、`flex-nowrap`、`flex-1`、`flex-auto`、`flex-initial`、`flex-none`、`grow`、`grow-0`、`shrink`、`shrink-0`
+- **Grid**：`grid-cols-1..12`、`col-span-1..12`、`col-span-full`
+- **Alignment**：`justify-{start,end,center,between,around,evenly}`、`items-{start,end,center,baseline,stretch}`、`self-{auto,start,end,center,stretch,baseline}`
+- **Gap 与 Padding**：`gap-{0,4,8,12,16,20,24,28,40,48}`、`{p,px,py}-{0,4,8,12,16,20,24,28,40,48}`
+- **Sizing**：`{w,h}-{12,16,20,24,28,32,40,48,56,64,72,80}`、`{w,h}-{full,screen,hug,fill}`、`min-{w,h}-{0,screen}`、`max-{w,h}-{10,20,30,40,50,60,70,80,90,100}p`
+- **Overflow / Whitespace**：`overflow-{auto,hidden,visible,scroll}`、`overflow-{x,y}-{auto,hidden}`、`whitespace-{pre-wrap,nowrap}`
+
+Margin、单侧内边距（`pt/pr/pb/pl`）、`size-*`、固定 `min/max-w/h-12..80`、`grid-rows-*`、`row-span-*`、颜色、边框、渐变、阴影、模糊、定位与层级、排版、交互、透明度与遮罩保持静态工具类，不生成响应式矩阵。
 
 ---
 
-## 圆角（Radius）
+## 1. 颜色工具类
 
-### 全局圆角 `rounded-*`
-| 类名 | 圆角 |
-| --- | --- |
-| `rounded-0` | 0 |
-| `rounded-4` | 4px |
-| `rounded-8` | 8px |
-| `rounded-12` | 12px |
-| `rounded-16` | 16px |
-| `rounded-20` | 20px |
-| `rounded-24` | 24px |
-| `rounded-28` | 28px |
-| `rounded-32` | 32px |
-| `rounded-40` | 40px |
-| `rounded-48` | 48px |
-| `rounded-80` | 80px |
+颜色描边类（`border-*`）生成 `0.5px`（`0.03125rem`）实线边框；内描边类（`inset-*`）通过 `box-shadow: inset` 实现 Figma 风格 `0.5px` 内描边，不占用盒模型空间。
 
-### 边向圆角（取值：0/4/8/12/16/20/24/28/32/40/48/80）
-| 上边 | 右边 | 下边 | 左边 |
-| --- | --- | --- | --- |
-| `rounded-t-0` → 0 | `rounded-r-0` → 0 | `rounded-b-0` → 0 | `rounded-l-0` → 0 |
-| `rounded-t-4` → 4px | `rounded-r-4` → 4px | `rounded-b-4` → 4px | `rounded-l-4` → 4px |
-| `rounded-t-8` → 8px | `rounded-r-8` → 8px | `rounded-b-8` → 8px | `rounded-l-8` → 8px |
-| `rounded-t-12` → 12px | `rounded-r-12` → 12px | `rounded-b-12` → 12px | `rounded-l-12` → 12px |
-| `rounded-t-16` → 16px | `rounded-r-16` → 16px | `rounded-b-16` → 16px | `rounded-l-16` → 16px |
-| `rounded-t-20` → 20px | `rounded-r-20` → 20px | `rounded-b-20` → 20px | `rounded-l-20` → 20px |
-| `rounded-t-24` → 24px | `rounded-r-24` → 24px | `rounded-b-24` → 24px | `rounded-l-24` → 24px |
-| `rounded-t-28` → 28px | `rounded-r-28` → 28px | `rounded-b-28` → 28px | `rounded-l-28` → 28px |
-| `rounded-t-32` → 32px | `rounded-r-32` → 32px | `rounded-b-32` → 32px | `rounded-l-32` → 32px |
-| `rounded-t-40` → 40px | `rounded-r-40` → 40px | `rounded-b-40` → 40px | `rounded-l-40` → 40px |
-| `rounded-t-48` → 48px | `rounded-r-48` → 48px | `rounded-b-48` → 48px | `rounded-l-48` → 48px |
-| `rounded-t-80` → 80px | `rounded-r-80` → 80px | `rounded-b-80` → 80px | `rounded-l-80` → 80px |
+### 随主题变化的黑白阶
 
-### 单角圆角（同一取值集）
-| 左上 | 右上 | 右下 | 左下 |
-| --- | --- | --- | --- |
-| `rounded-tl-0` | `rounded-tr-0` | `rounded-br-0` | `rounded-bl-0` |
-| `rounded-tl-4` | `rounded-tr-4` | `rounded-br-4` | `rounded-bl-4` |
-| `rounded-tl-8` | `rounded-tr-8` | `rounded-br-8` | `rounded-bl-8` |
-| `rounded-tl-12` | `rounded-tr-12` | `rounded-br-12` | `rounded-bl-12` |
-| `rounded-tl-16` | `rounded-tr-16` | `rounded-br-16` | `rounded-bl-16` |
-| `rounded-tl-20` | `rounded-tr-20` | `rounded-br-20` | `rounded-bl-20` |
-| `rounded-tl-24` | `rounded-tr-24` | `rounded-br-24` | `rounded-bl-24` |
-| `rounded-tl-28` | `rounded-tr-28` | `rounded-br-28` | `rounded-bl-28` |
-| `rounded-tl-32` | `rounded-tr-32` | `rounded-br-32` | `rounded-bl-32` |
-| `rounded-tl-40` | `rounded-tr-40` | `rounded-br-40` | `rounded-bl-40` |
-| `rounded-tl-48` | `rounded-tr-48` | `rounded-br-48` | `rounded-bl-48` |
-| `rounded-tl-80` | `rounded-tr-80` | `rounded-br-80` | `rounded-bl-80` |
+`-100` 档位同时提供简写别名（`{bg,text,border,inset}-black` 与 `{bg,text,border,inset}-white`）。
+
+| 色阶 | 背景类 | 文字类 | 边框类（`0.5px`） | 内描边类（`0.5px`） |
+| --- | --- | --- | --- | --- |
+| Black 100 / 80 / 40 / 20 / 10 / 4 | `bg-black-{100,80,40,20,10,4}` | `text-black-{100,80,40,20,10,4}` | `border-black-{100,80,40,20,10,4}` | `inset-black-{100,80,40,20,10,4}` |
+| White 100 / 80 / 40 / 20 / 10 / 4 | `bg-white-{100,80,40,20,10,4}` | `text-white-{100,80,40,20,10,4}` | `border-white-{100,80,40,20,10,4}` | `inset-white-{100,80,40,20,10,4}` |
+
+### 静态黑白阶（不随主题变化）
+
+`-100` 档位同时提供简写别名（`{bg,text,border,inset}-static-black` 与 `{bg,text,border,inset}-static-white`）。
+
+| 色阶 | 背景类 | 文字类 | 边框类（`0.5px`） | 内描边类（`0.5px`） |
+| --- | --- | --- | --- | --- |
+| Static Black 100 / 80 / 40 / 20 / 10 / 4 | `bg-static-black-{100,80,40,20,10,4}` | `text-static-black-{100,80,40,20,10,4}` | `border-static-black-{100,80,40,20,10,4}` | `inset-static-black-{100,80,40,20,10,4}` |
+| Static White 100 / 80 / 40 / 20 / 10 / 4 | `bg-static-white-{100,80,40,20,10,4}` | `text-static-white-{100,80,40,20,10,4}` | `border-static-white-{100,80,40,20,10,4}` | `inset-static-white-{100,80,40,20,10,4}` |
+
+### 背景层级、表面与语义色
+
+| 分类 | 类名 | 说明 |
+| --- | --- | --- |
+| 页面与容器背景 | `bg-background`、`bg-background-1`、`bg-background-2`、`bg-background-3` | 当前主题页面背景与分层容器背景 |
+| 表面层级 | `bg-surface-1`、`bg-surface-2`、`bg-surface-3` | 浮层与卡片表面背景 Token |
+| 强调填充 | `bg-color-1`、`bg-color-2` | 主题辅助填充色 |
+| 透明 | `bg-transparent`、`border-transparent`、`inset-transparent` | 透明背景或 `0.5px` 透明描边占位 |
+| 核心语义色 | `{bg,text,border,inset}-{primary,foreground,brand}` | 主色、前景色与品牌色 |
+| 辅助色板 | `{bg,text,border,inset}-{purple,indigo,blue,cyan,mint,green,yellow,orange,red}` | 9 色辅助色板（同时提供背景、文字、边框、内描边） |
 
 ---
 
-## 内边距 `p-*`
+## 2. 背景渐变
 
-| 类名 | 数值 | 类名 | 数值 |
-| --- | --- | --- | --- |
-| `p-0` | 0 | `p-24` | 24px |
-| `p-4` | 4px | `p-28` | 28px |
-| `p-8` | 8px | `p-40` | 40px |
-| `p-12` | 12px | `p-48` | 48px |
-| `p-16` | 16px |  |  |
-| `p-20` | 20px |  |  |
-
-> 取值映射同样适用于 `px-*`, `py-*`, `pt-*`, `pr-*`, `pb-*`, `pl-*`。
-
-## 外边距 `m-*`
-后缀取值与前缀家族同 padding：`m-*`, `mx-*`, `my-*`, `mt-*`, `mr-*`, `mb-*`, `ml-*`。Margin 使用 rem，并遵循相同的响应式根字号计算。
-
-## Gap
-| 类名 | 数值 |
-| --- | --- |
-| `gap-0` | 0 |
-| `gap-4` | 4px |
-| `gap-8` | 8px |
-| `gap-12` | 12px |
-| `gap-16` | 16px |
-| `gap-20` | 20px |
-| `gap-24` | 24px |
-| `gap-28` | 28px |
-| `gap-40` | 40px |
-| `gap-48` | 48px |
-
----
-
-## 尺寸
-
-### 宽高同时 `size-*`
-| 类名 | 尺寸 |
-| --- | --- |
-| `size-16` | 16px |
-| `size-20` | 20px |
-| `size-24` | 24px |
-| `size-28` | 28px |
-| `size-32` | 32px |
-| `size-40` | 40px |
-| `size-48` | 48px |
-| `size-56` | 56px |
-| `size-64` | 64px |
-| `size-72` | 72px |
-| `size-80` | 80px |
-
-### 单独宽/高
-`w-*` 与 `h-*` 可用：16 / 20 / 24 / 28 / 32 / 40 / 48 / 56 / 64 / 72 / 80。
-
----
-
-## 字体 & 行高
-
-| 类名 | 字号 / 行高 |
-| --- | --- |
-| `text-12` | 12px / 16px |
-| `text-14` | 14px / 20px |
-| `text-16` | 16px / 24px |
-| `text-18` | 18px / 28px |
-| `text-24` | 24px / 32px |
-| `text-32` | 32px / 40px |
-| `text-48` | 48px / 58px |
-| `text-64` | 64px / 78px |
-
-### 段落专用
-| 类名 | 下边距 |
-| --- | --- |
-| `text-12.paragraph` | 8px |
-| `text-14.paragraph` | 10px |
-| `text-16.paragraph` | 12px |
-| `text-18.paragraph` | 14px |
-| `text-24.paragraph` | 18px |
-| `text-32.paragraph` | 24px |
-| `text-48.paragraph` | 36px |
-| `text-64.paragraph` | 48px |
-
-### 字重
-| 类名 | 值 |
-| --- | --- |
-| `font-regular` | 400 |
-| `font-semibold` | 600 |
-
----
-
-## 颜色（自动随主题）
-
-### 黑白阶（背景 / 文字 / 描边）
-| 色阶 | 背景类 | 文字类 | 描边类 |
-| --- | --- | --- | --- |
-| Black 100 | `bg-black-100` | `text-black-100` | `border-black-100` |
-| Black 80 | `bg-black-80` | `text-black-80` | `border-black-80` |
-| Black 40 | `bg-black-40` | `text-black-40` | `border-black-40` |
-| Black 20 | `bg-black-20` | `text-black-20` | `border-black-20` |
-| Black 10 | `bg-black-10` | `text-black-10` | `border-black-10` |
-| Black 4 | `bg-black-4` | `text-black-4` | `border-black-4` |
-| White 100 | `bg-white-100` | `text-white-100` | `border-white-100` |
-| White 80 | `bg-white-80` | `text-white-80` | `border-white-80` |
-| White 40 | `bg-white-40` | `text-white-40` | `border-white-40` |
-| White 20 | `bg-white-20` | `text-white-20` | `border-white-20` |
-| White 10 | `bg-white-10` | `text-white-10` | `border-white-10` |
-| White 4 | `bg-white-4` | `text-white-4` | `border-white-4` |
-
-### 静态黑白（不随主题）
-| 色阶 | 背景类 | 文字类 | 描边类 |
-| --- | --- | --- | --- |
-| Static Black 100 | `bg-static-black-100` | `text-static-black-100` | `border-static-black-100` |
-| Static Black 80 | `bg-static-black-80` | `text-static-black-80` | `border-static-black-80` |
-| Static Black 40 | `bg-static-black-40` | `text-static-black-40` | `border-static-black-40` |
-| Static Black 20 | `bg-static-black-20` | `text-static-black-20` | `border-static-black-20` |
-| Static Black 10 | `bg-static-black-10` | `text-static-black-10` | `border-static-black-10` |
-| Static Black 4 | `bg-static-black-4` | `text-static-black-4` | `border-static-black-4` |
-| Static White 100 | `bg-static-white-100` | `text-static-white-100` | `border-static-white-100` |
-| Static White 80 | `bg-static-white-80` | `text-static-white-80` | `border-static-white-80` |
-| Static White 40 | `bg-static-white-40` | `text-static-white-40` | `border-static-white-40` |
-| Static White 20 | `bg-static-white-20` | `text-static-white-20` | `border-static-white-20` |
-| Static White 10 | `bg-static-white-10` | `text-static-white-10` | `border-static-white-10` |
-| Static White 4 | `bg-static-white-4` | `text-static-white-4` | `border-static-white-4` |
-
-### 背景层级 & 主色
 | 类名 | 说明 |
 | --- | --- |
-| `bg-background-1/2/3/4/5/6` | 面板层级背景 |
-| `bg-background` | 当前主题背景 |
-| `bg/text/border-primary` | 主色 |
-| `bg/text/border-foreground` | 前景色 |
-| `bg/text/border-brand` | 品牌色 |
-
-### 辅助色板（统一拥有 `bg- / text- / border-`）
-`purple`, `indigo`, `blue`, `cyan`, `mint`, `green`, `yellow`, `orange`, `red`
+| `bg-gradient-primary` | 主色玻璃高光渐变 |
+| `bg-gradient-gray` | 中性灰阶面板渐变 |
+| `bg-gradient-black` | 静态深黑玻璃渐变 |
+| `bg-gradient-{purple,indigo,blue,cyan,mint,green,yellow,orange,red}` | 辅助色玻璃渐变 |
 
 ---
 
-## 渐变背景
-| 类名 | 描述 |
-| --- | --- |
-| `bg-gradient-primary` | 主色玻璃渐变 |
-| `bg-gradient-gray` | 灰色渐变 |
-| `bg-gradient-black` | 黑色渐变 |
-| `bg-gradient-purple` | 紫色渐变 |
-| `bg-gradient-indigo` | 靛蓝渐变 |
-| `bg-gradient-blue` | 蓝色渐变 |
-| `bg-gradient-cyan` | 青色渐变 |
-| `bg-gradient-mint` | 薄荷渐变 |
-| `bg-gradient-green` | 绿色渐变 |
-| `bg-gradient-yellow` | 黄色渐变 |
-| `bg-gradient-orange` | 橙色渐变 |
-| `bg-gradient-red` | 红色渐变 |
+## 3. 视觉效果（阴影与毛玻璃）
 
----
-
-## 阴影 / 特效 / 模糊
 | 类名 | 效果 |
 | --- | --- |
-| `shadow-glass-1` | 多层玻璃阴影 + 1px 描边 |
-| `shadow-glass-2` | 更强玻璃阴影 |
-| `shadow-glow` | 外发光 |
-| `shadow-focus` | 聚焦描边 |
-| `shadow-inner` | 内凹阴影 |
-| `shadow-drop-1` | 轻投影 |
-| `shadow-drop-2` | 强投影 |
-| `shadow-image-hover` | 图像内阴影 hover 效果 |
-| `backdrop-blur-40` | 背景模糊 20px |
-| `backdrop-blur-100` | 背景模糊 50px |
+| `shadow-glass-1` | 轻量玻璃阴影 + `1px` 半透明白边 + `8px`（`0.5rem`）背景模糊 |
+| `shadow-glass-2` | 强玻璃浮层阴影 + `1px` 半透明白边 + `20px`（`1.25rem`）背景模糊 |
+| `shadow-glow` | 黑白双层外发光 |
+| `shadow-focus` | `4px`（`0.25rem`）焦点光环 |
+| `shadow-inner` | 多层内高光与内凹阴影 |
+| `shadow-drop-1` | `0.5px` 轻投影 |
+| `shadow-drop-2` | `2px / 4px` 柔和投影 |
+| `shadow-image-hover` | 媒体卡片顶部内阴影遮罩 |
+| `shadow-none` | 清除阴影（`box-shadow: none`） |
+| `backdrop-blur-40` | 背景模糊 `20px`（`1.25rem`） |
+| `backdrop-blur-100` | 背景模糊 `50px`（`3.125rem`） |
 
 ---
 
-## 基础层（自动生效）
-- `:root` + `.theme-*`：SnowUI / iOS 明暗主题变量。
-- `@layer base`：提供 14px–16px 响应式根字号；组件中的 rem 排版、Border、Size、Padding、Gap 与普通 Radius Token 会随之联动。
-- `@layer base`：提供 `body / code` 默认排版与颜色、页面级原生滚动条，以及文档流、列表、媒体、表单和链接的浏览器初始化。
-- 未经 SnowUI `Frame` 承载的原生 `<a href>` 默认保留下划线，hover 时隐藏；`Link`、`Button href` 等组件链接继续由组件自身的公开状态控制，不受该规则覆盖。
-- React / Next / 常见应用根使用 `#root`、`#__next` 或 `#app`；其他框架应在真实应用根添加 `[data-snowui-app-root]`。挂到 body 的 Portal 必须位于该根节点外。
-- Table、focus-visible 与 disabled 的最终视觉不由基础层统一覆盖，SnowUI 组件各自拥有这些状态和表面。
-- Phosphor Duotone 图标背景层统一透明度 `0.08`。
+## 4. 边框与圆角
 
-**使用方法**：入口处引入 `snowui.css`，即可像 Tailwind 工具类一样使用上表所有类名。
+### 圆角（`rounded-*`）
+
+取值档位：`0`、`4`、`8`、`12`、`16`、`20`、`24`、`28`、`32`、`40`、`48`、`80`（基于 rem 的名义 px）。
+
+| 家族 | 类名 | 说明 |
+| --- | --- | --- |
+| 全局四角 | `rounded-{0,4,8,12,16,20,24,28,32,40,48,80}` | 兼容别名：`rounded-lg`（`8`）、`rounded-xl`（`12`）、`rounded-2xl`（`16`）、`rounded-3xl`（`24`） |
+| 胶囊／正圆 | `rounded-full` | `border-radius: 9999px; object-fit: cover` |
+| 单侧双角 | `rounded-{t,r,b,l}-{0,4,8,12,16,20,24,28,32,40,48,80}` | 上、右、下、左单边圆角 |
+| 单角 | `rounded-{tl,tr,br,bl}-{0,4,8,12,16,20,24,28,32,40,48,80}` | 左上、右上、右下、左下独立圆角 |
+
+### 边框宽度与单边黑色描边
+
+| 家族 | 类名 | 说明 |
+| --- | --- | --- |
+| 边框宽度 | `border-0`、`border-0.5`、`border-1`、`border-2`、`border-4` | `0`、`0.5px`、`1px`、`2px`、`4px`（非零宽度自带 `solid`） |
+| 单边 Black 描边 | `border-{t,r,b,l}-black`、`border-{t,r,b,l}-black-{100,80,40,20,10,4}` | 上、右、下、左单侧 `0.5px`（`0.03125rem`）实线边框 |
+
+---
+
+## 5. 间距（Padding、Margin、Gap）
+
+名义步进档位：`0`、`4`、`8`、`12`、`16`、`20`、`24`、`28`、`40`、`48`（rem）。
+
+| 家族 | 前缀／类名 | 说明 |
+| --- | --- | --- |
+| 内边距 | `p-*`、`px-*`、`py-*`、`pt-*`、`pr-*`、`pb-*`、`pl-*` | `p/px/py` 已纳入 `snowui-responsive.css` |
+| 外边距 | `m-*`、`mx-*`、`my-*`、`mt-*`、`mr-*`、`mb-*`、`ml-*`、`m` | `m` 为 `m-4`（`4px`）简写别名；仅静态可用 |
+| 间距 Gap | `gap-*` | Flex / Grid 容器间距（`0`–`48`）；支持响应式前缀 |
+
+---
+
+## 6. 尺寸（`size-*`、`w-*`、`h-*`、`min-*`、`max-*`）
+
+固定尺寸档位：`12`、`16`、`20`、`24`、`28`、`32`、`40`、`48`、`56`、`64`、`72`、`80`（rem）。
+
+| 家族 | 类名 | 说明 |
+| --- | --- | --- |
+| 等宽高 | `size-{12,16,20,24,28,32,40,48,56,64,72,80}` | 同时设置相等的 `width` 与 `height` |
+| 固定宽／高 | `w-{12..80}`、`h-{12..80}` | 独立 rem 宽度或高度 |
+| 容器与视口 | `w-full`（`100%`）、`h-full`（`100%`）、`w-screen`（`100vw`）、`h-screen`（`100vh`） | 百分比与视口尺寸 |
+| 自适应与填充 | `w-hug`（`fit-content`）、`h-hug`（`fit-content`）、`w-fill`（`flex: 1; width: 100%`）、`h-fill`（`flex: 1; height: 100%; align-self: stretch`） | 对齐 Figma Hug / Fill 语义 |
+| 最小宽／高 | `min-w-0`、`min-h-0`、`min-w-{12..80}`、`min-h-{12..80}`、`min-w-screen`、`min-h-screen` | 最小尺寸约束 |
+| 最大宽／高（固定） | `max-w-{12..80}`、`max-h-{12..80}` | 最大 rem 尺寸约束 |
+| 最大宽／高（百分比） | `max-w-{10,20,30,40,50,60,70,80,90,100}p`、`max-h-{10,20,30,40,50,60,70,80,90,100}p` | `10%`–`100%` 最大尺寸约束 |
+
+---
+
+## 7. 布局（Layout）
+
+| 分组 | 类名 |
+| --- | --- |
+| Display | `block`、`inline-block`、`inline`、`flex`、`inline-flex`、`grid`、`inline-grid`、`hidden` |
+| Flex 方向与换行 | `flex-row`、`flex-row-reverse`、`flex-col`、`flex-col-reverse`（均自带 `display: flex`）、`flex-wrap`、`flex-nowrap` |
+| Flex 子项伸缩 | `flex-1`、`flex-auto`、`flex-initial`、`flex-none`、`grow`、`grow-0`、`shrink`、`shrink-0` |
+| Grid 行列轨道 | `grid-cols-{1..12}`、`grid-rows-{1..6}` |
+| Grid 跨度 | `col-span-{1..12}`、`col-span-full`、`row-span-{1..6}`、`row-span-full` |
+| 对齐方式 | `justify-{start,end,center,between,around,evenly}`、`items-{start,end,center,baseline,stretch}`、`self-{auto,start,end,center,stretch,baseline}` |
+| 定位模式与 Z-index | `relative`、`absolute`、`fixed`、`sticky`；`z-{0,10,20,30,40,50,100,auto}` |
+| 溢出与空白换行 | `overflow-{auto,hidden,visible,scroll}`、`overflow-x-{auto,hidden}`、`overflow-y-{auto,hidden}`、`whitespace-pre-wrap`、`whitespace-nowrap` |
+
+---
+
+## 8. 定位偏移（Offsets）
+
+偏移档位：`0`、`4`、`8`、`12`、`16`、`20`、`24`、`28`、`40`、`48`（rem）：
+- `top-{0,4,8,12,16,20,24,28,40,48}`
+- `right-{0,4,8,12,16,20,24,28,40,48}`
+- `bottom-{0,4,8,12,16,20,24,28,40,48}`
+- `left-{0,4,8,12,16,20,24,28,40,48}`
+
+---
+
+## 9. 字体排版（Typography）
+
+| 类名 | 兼容别名 | 字号 / 行高 | `.paragraph` 段落底边距 |
+| --- | --- | --- | --- |
+| `text-12` | `text-xs` | `12px / 16px`（`0.75rem / 1rem`） | `text-12.paragraph` → `8px` |
+| `text-14` | `text-sm` | `14px / 20px`（`0.875rem / 1.25rem`） | `text-14.paragraph` → `10px` |
+| `text-16` | `text-base` | `16px / 24px`（`1rem / 1.5rem`） | `text-16.paragraph` → `12px` |
+| `text-18` | `text-lg` | `18px / 28px`（`1.125rem / 1.75rem`） | `text-18.paragraph` → `14px` |
+| `text-24` | `text-2xl` | `24px / 32px`（`1.5rem / 2rem`） | `text-24.paragraph` → `18px` |
+| `text-32` | `text-4xl` | `32px / 40px`（`2rem / 2.5rem`） | `text-32.paragraph` → `24px` |
+| `text-48` | `text-5xl` | `48px / 56px`（`3rem / 3.5rem`） | `text-48.paragraph` → `36px` |
+| `text-64` | — | `64px / 72px`（`4rem / 4.5rem`） | `text-64.paragraph` → `48px` |
+
+- **字重**：`font-regular` / `font-normal`（`400`）、`font-semibold`（`600`）
+- **大小写与字距**：`uppercase`（`text-transform: uppercase`）、`tracking-wide`（`letter-spacing: 0.05em`）
+
+---
+
+## 10. 交互、透明度与遮罩
+
+| 分类 | 类名 | 说明 |
+| --- | --- | --- |
+| 指针与选择 | `cursor-pointer`、`select-none` | 手型光标、禁止文本选中 |
+| 尺寸拖拽 | `resize-none`、`resize-y`、`resize-x`、`resize` | 元素缩放方向控制 |
+| 透明度 | `opacity-{0,4,10,20,40,80,100}` | 透明度 `0`、`0.04`、`0.1`、`0.2`、`0.4`、`0.8`、`1` |
+| 渐变遮罩 | `mask-fade-bottom` | 底部渐隐线性遮罩（通过 `--mask-height` 控制高度，默认 `2em`） |
+
+---
+
+## 基础层说明（`snowui-base.css`）
+
+- `:root` 与 `[theme="..."]` / `.theme-*` 提供 SnowUI / iOS 明暗主题变量（`snowui-themes.css`）。
+- `@layer base` 设置 `box-sizing: border-box`、`14px–16px` 响应式根字号（`clamp(14px, 0.875vw + 10px, 16px)`）、`body` 与内联 `code` 默认排版、`Black/20%` 细原生滚动条，以及标题、列表、媒体和原生表单控件的基础初始化。
+- 未由 `[data-snowui-frame]` 承载的普通 `<a href>` 默认使用 `--black-40` 且无下划线，`:hover` / `:focus-visible` 过渡为 `--black-100`，显式添加下划线的原生链接在 hover 时隐藏下划线；`Link`、`Button href` 等组件链接保持组件自身公开状态。
+- `#root`、`#__next`、`#app` 与 `[data-snowui-app-root]` 建立 `isolation: isolate` 独立层叠上下文；挂到 `body` 的 Portal（如 `Dialog`、`Tooltip`）必须位于该根节点外，确保 `backdrop-filter` 可采样页面内容。
+- Phosphor Duotone 图标默认 `0.2` 的背景层透明度统一归一化为 `0.08`。

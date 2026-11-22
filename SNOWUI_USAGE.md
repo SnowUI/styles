@@ -2,241 +2,212 @@
 
 [查看中文文档](./SNOWUI_USAGE.zh.md)
 
-All classes can be used directly in JSX/HTML. Numeric suffixes denote their nominal px value at the 16px root baseline (e.g. `p-12` = 12px).
+All classes can be applied directly in HTML, Svelte, or JSX. Numeric suffixes denote nominal pixel values at a `16px` root baseline (for example, `p-12` = `0.75rem` = `12px` at `16px`).
 
-Padding, gap, and ordinary radius utilities use rem. Their numeric suffixes are nominal px values at a 16px root; with `snowui-base.css`, computed values scale smoothly with its responsive 14px–16px root size. Responsive prefixes switch explicit semantic steps, while `rounded-full` remains the semantic `9999px` exception.
+With `snowui-base.css`, rem-based typography, border widths, sizing, padding, margin, gap, offsets, and ordinary radius utilities scale smoothly with the `14px–16px` responsive root font size. `rounded-full` remains the semantic `9999px` exception.
 
-## Responsive utilities (optional entry)
+## Entrypoints & Responsive Utilities
 
-Import `@snowui-design-system/styles/responsive` or `snowui-responsive.css` to enable mobile-first prefixes: `sm:` 640px, `md:` 768px, `lg:` 1024px, `xl:` 1280px, and `2xl:` 1536px.
+| Import | File | Scope |
+| --- | --- | --- |
+| `@snowui-design-system/styles` | `snowui.css` | Default bundle (`base` + `utilities` + `themes` + `extra`) |
+| `@snowui-design-system/styles/base` | `snowui-base.css` | Browser reset, root font scaling, native scrollbars, app root isolation |
+| `@snowui-design-system/styles/themes` | `snowui-themes.css` | Light/dark theme tokens and color scales |
+| `@snowui-design-system/styles/utilities` | `snowui-utilities.css` | Static utility classes documented below |
+| `@snowui-design-system/styles/responsive` | `snowui-responsive.css` | Optional mobile-first breakpoint utilities |
+| `@snowui-design-system/styles/extra` | `snowui-extra.css` | Supplemental extension stylesheet |
+
+Import `@snowui-design-system/styles/responsive` (or `snowui-responsive.css`) to enable mobile-first prefixes: `sm:` (`640px`), `md:` (`768px`), `lg:` (`1024px`), `xl:` (`1280px`), and `2xl:` (`1536px`).
 
 ```html
 <div class="grid grid-cols-1 gap-8 p-8 md:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:p-24"></div>
 ```
 
-Phase-one allowlist: Display, Flexbox, `grid-cols-*`, `col-span-*`, Alignment, Gap, `p/px/py`, layout sizing, and Overflow/Whitespace. Static Margin remains available but has no responsive matrix. Colors, borders, gradients, shadows, blur, opacity, cursor, resize/select, hover/focus, Position/Inset/Z-index, and Typography also remain static-only.
+Responsive phase-one allowlist (`scripts/generate-responsive-utilities.mjs`):
+- **Display**: `block`, `inline-block`, `inline`, `flex`, `inline-flex`, `grid`, `inline-grid`, `hidden`
+- **Flexbox**: `flex-row`, `flex-row-reverse`, `flex-col`, `flex-col-reverse`, `flex-wrap`, `flex-nowrap`, `flex-1`, `flex-auto`, `flex-initial`, `flex-none`, `grow`, `grow-0`, `shrink`, `shrink-0`
+- **Grid**: `grid-cols-1..12`, `col-span-1..12`, `col-span-full`
+- **Alignment**: `justify-{start,end,center,between,around,evenly}`, `items-{start,end,center,baseline,stretch}`, `self-{auto,start,end,center,stretch,baseline}`
+- **Gap & Padding**: `gap-{0,4,8,12,16,20,24,28,40,48}`, `{p,px,py}-{0,4,8,12,16,20,24,28,40,48}`
+- **Sizing**: `{w,h}-{12,16,20,24,28,32,40,48,56,64,72,80}`, `{w,h}-{full,screen,hug,fill}`, `min-{w,h}-{0,screen}`, `max-{w,h}-{10,20,30,40,50,60,70,80,90,100}p`
+- **Overflow / Whitespace**: `overflow-{auto,hidden,visible,scroll}`, `overflow-{x,y}-{auto,hidden}`, `whitespace-{pre-wrap,nowrap}`
+
+Margin, single-side padding (`pt/pr/pb/pl`), `size-*`, fixed `min/max-w/h-12..80`, `grid-rows-*`, `row-span-*`, colors, borders, gradients, shadows, blur, positioning/z-index, typography, interactivity, opacity, and masks remain static-only.
 
 ---
 
-## Radius Utilities
+## 1. Color Utilities
 
-### Global `rounded-*`
-| Class | Radius |
-| --- | --- |
-| `rounded-0` | 0 |
-| `rounded-4` | 4px |
-| `rounded-8` | 8px |
-| `rounded-12` | 12px |
-| `rounded-16` | 16px |
-| `rounded-20` | 20px |
-| `rounded-24` | 24px |
-| `rounded-28` | 28px |
-| `rounded-32` | 32px |
-| `rounded-40` | 40px |
-| `rounded-48` | 48px |
-| `rounded-80` | 80px |
+Color border utilities (`border-*`) apply a `0.5px` (`0.03125rem`) solid border; inset border utilities (`inset-*`) apply a `0.5px` (`0.03125rem`) inner stroke via `box-shadow: inset` without affecting box dimensions.
 
-### Edge radius (value set: 0/4/8/12/16/20/24/28/32/40/48/80)
-| Top | Right | Bottom | Left |
-| --- | --- | --- | --- |
-| `rounded-t-0` → 0 | `rounded-r-0` → 0 | `rounded-b-0` → 0 | `rounded-l-0` → 0 |
-| `rounded-t-4` → 4px | `rounded-r-4` → 4px | `rounded-b-4` → 4px | `rounded-l-4` → 4px |
-| `rounded-t-8` → 8px | `rounded-r-8` → 8px | `rounded-b-8` → 8px | `rounded-l-8` → 8px |
-| `rounded-t-12` → 12px | `rounded-r-12` → 12px | `rounded-b-12` → 12px | `rounded-l-12` → 12px |
-| `rounded-t-16` → 16px | `rounded-r-16` → 16px | `rounded-b-16` → 16px | `rounded-l-16` → 16px |
-| `rounded-t-20` → 20px | `rounded-r-20` → 20px | `rounded-b-20` → 20px | `rounded-l-20` → 20px |
-| `rounded-t-24` → 24px | `rounded-r-24` → 24px | `rounded-b-24` → 24px | `rounded-l-24` → 24px |
-| `rounded-t-28` → 28px | `rounded-r-28` → 28px | `rounded-b-28` → 28px | `rounded-l-28` → 28px |
-| `rounded-t-32` → 32px | `rounded-r-32` → 32px | `rounded-b-32` → 32px | `rounded-l-32` → 32px |
-| `rounded-t-40` → 40px | `rounded-r-40` → 40px | `rounded-b-40` → 40px | `rounded-l-40` → 40px |
-| `rounded-t-48` → 48px | `rounded-r-48` → 48px | `rounded-b-48` → 48px | `rounded-l-48` → 48px |
-| `rounded-t-80` → 80px | `rounded-r-80` → 80px | `rounded-b-80` → 80px | `rounded-l-80` → 80px |
+### Theme-Aware Black & White Scales
 
-### Single corner
-Same value set for:
-- `rounded-tl-*`
-- `rounded-tr-*`
-- `rounded-br-*`
-- `rounded-bl-*`
+`-100` steps also provide bare aliases (`bg-black`, `text-black`, `border-black`, `inset-black`, `bg-white`, `text-white`, `border-white`, `inset-white`).
+
+| Scale | Background | Text | Border (`0.5px`) | Inset Stroke (`0.5px`) |
+| --- | --- | --- | --- | --- |
+| Black 100 / 80 / 40 / 20 / 10 / 4 | `bg-black-{100,80,40,20,10,4}` | `text-black-{100,80,40,20,10,4}` | `border-black-{100,80,40,20,10,4}` | `inset-black-{100,80,40,20,10,4}` |
+| White 100 / 80 / 40 / 20 / 10 / 4 | `bg-white-{100,80,40,20,10,4}` | `text-white-{100,80,40,20,10,4}` | `border-white-{100,80,40,20,10,4}` | `inset-white-{100,80,40,20,10,4}` |
+
+### Static Black & White Scales (Theme-Independent)
+
+`-100` steps also provide bare aliases (`{bg,text,border,inset}-static-black` and `{bg,text,border,inset}-static-white`).
+
+| Scale | Background | Text | Border (`0.5px`) | Inset Stroke (`0.5px`) |
+| --- | --- | --- | --- | --- |
+| Static Black 100 / 80 / 40 / 20 / 10 / 4 | `bg-static-black-{100,80,40,20,10,4}` | `text-static-black-{100,80,40,20,10,4}` | `border-static-black-{100,80,40,20,10,4}` | `inset-static-black-{100,80,40,20,10,4}` |
+| Static White 100 / 80 / 40 / 20 / 10 / 4 | `bg-static-white-{100,80,40,20,10,4}` | `text-static-white-{100,80,40,20,10,4}` | `border-static-white-{100,80,40,20,10,4}` | `inset-static-white-{100,80,40,20,10,4}` |
+
+### Backgrounds, Surfaces & Semantic Tokens
+
+| Category | Classes | Description |
+| --- | --- | --- |
+| Page & Layered Backgrounds | `bg-background`, `bg-background-1`, `bg-background-2`, `bg-background-3` | Active theme background and layered containers |
+| Surface Levels | `bg-surface-1`, `bg-surface-2`, `bg-surface-3` | Elevated surface tokens |
+| Accent Tokens | `bg-color-1`, `bg-color-2` | Theme accent fill tokens |
+| Transparent | `bg-transparent`, `border-transparent`, `inset-transparent` | Transparent background or `0.5px` stroke |
+| Semantic Roles | `{bg,text,border,inset}-{primary,foreground,brand}` | Primary, foreground, and brand tokens |
+| Secondary Palette | `{bg,text,border,inset}-{purple,indigo,blue,cyan,mint,green,yellow,orange,red}` | Full secondary palette across fill, text, border, and inset stroke |
 
 ---
 
-## Padding `p-*`
+## 2. Background Gradients
 
-| Class | Value | Class | Value |
-| --- | --- | --- | --- |
-| `p-0` | 0 | `p-24` | 24px |
-| `p-4` | 4px | `p-28` | 28px |
-| `p-8` | 8px | `p-40` | 40px |
-| `p-12` | 12px | `p-48` | 48px |
-| `p-16` | 16px |  |  |
-| `p-20` | 20px |  |  |
-
-Applies to `px-*`, `py-*`, `pt-*`, `pr-*`, `pb-*`, `pl-*` with identical value mapping.
-
-## Margin `m-*`
-Same suffix set and prefixes as padding: `m-*`, `mx-*`, `my-*`, `mt-*`, `mr-*`, `mb-*`, `ml-*`. Margin is rem-based and follows the same responsive root-font calculation.
-
-## Gap
-| Class | Value |
-| --- | --- |
-| `gap-0` | 0 |
-| `gap-4` | 4px |
-| `gap-8` | 8px |
-| `gap-12` | 12px |
-| `gap-16` | 16px |
-| `gap-20` | 20px |
-| `gap-24` | 24px |
-| `gap-28` | 28px |
-| `gap-40` | 40px |
-| `gap-48` | 48px |
-
----
-
-## Size utilities
-
-### Combined width & height `size-*`
-| Class | Size |
-| --- | --- |
-| `size-16` | 16px |
-| `size-20` | 20px |
-| `size-24` | 24px |
-| `size-28` | 28px |
-| `size-32` | 32px |
-| `size-40` | 40px |
-| `size-48` | 48px |
-| `size-56` | 56px |
-| `size-64` | 64px |
-| `size-72` | 72px |
-| `size-80` | 80px |
-
-### Individual width / height
-Available for `w-*` and `h-*`: 16 / 20 / 24 / 28 / 32 / 40 / 48 / 56 / 64 / 72 / 80.
-
----
-
-## Typography
-
-| Class | Font size / line height |
-| --- | --- |
-| `text-12` | 12px / 16px |
-| `text-14` | 14px / 20px |
-| `text-16` | 16px / 24px |
-| `text-18` | 18px / 28px |
-| `text-24` | 24px / 32px |
-| `text-32` | 32px / 40px |
-| `text-48` | 48px / 58px |
-| `text-64` | 64px / 78px |
-
-### Paragraph helpers
-| Class | Bottom margin |
-| --- | --- |
-| `text-12.paragraph` | 8px |
-| `text-14.paragraph` | 10px |
-| `text-16.paragraph` | 12px |
-| `text-18.paragraph` | 14px |
-| `text-24.paragraph` | 18px |
-| `text-32.paragraph` | 24px |
-| `text-48.paragraph` | 36px |
-| `text-64.paragraph` | 48px |
-
-### Font weight
-| Class | Weight |
-| --- | --- |
-| `font-regular` | 400 |
-| `font-semibold` | 600 |
-
----
-
-## Theme-aware colors
-
-### Black / White scales
-| Color | Background | Text | Border |
-| --- | --- | --- | --- |
-| Black 100 | `bg-black-100` | `text-black-100` | `border-black-100` |
-| Black 80 | `bg-black-80` | `text-black-80` | `border-black-80` |
-| Black 40 | `bg-black-40` | `text-black-40` | `border-black-40` |
-| Black 20 | `bg-black-20` | `text-black-20` | `border-black-20` |
-| Black 10 | `bg-black-10` | `text-black-10` | `border-black-10` |
-| Black 4 | `bg-black-4` | `text-black-4` | `border-black-4` |
-| White 100 | `bg-white-100` | `text-white-100` | `border-white-100` |
-| White 80 | `bg-white-80` | `text-white-80` | `border-white-80` |
-| White 40 | `bg-white-40` | `text-white-40` | `border-white-40` |
-| White 20 | `bg-white-20` | `text-white-20` | `border-white-20` |
-| White 10 | `bg-white-10` | `text-white-10` | `border-white-10` |
-| White 4 | `bg-white-4` | `text-white-4` | `border-white-4` |
-
-### Static (theme-independent)
-| Color | Background | Text | Border |
-| --- | --- | --- | --- |
-| Static Black 100 | `bg-static-black-100` | `text-static-black-100` | `border-static-black-100` |
-| Static Black 80 | `bg-static-black-80` | `text-static-black-80` | `border-static-black-80` |
-| Static Black 40 | `bg-static-black-40` | `text-static-black-40` | `border-static-black-40` |
-| Static Black 20 | `bg-static-black-20` | `text-static-black-20` | `border-static-black-20` |
-| Static Black 10 | `bg-static-black-10` | `text-static-black-10` | `border-static-black-10` |
-| Static Black 4 | `bg-static-black-4` | `text-static-black-4` | `border-static-black-4` |
-| Static White 100 | `bg-static-white-100` | `text-static-white-100` | `border-static-white-100` |
-| Static White 80 | `bg-static-white-80` | `text-static-white-80` | `border-static-white-80` |
-| Static White 40 | `bg-static-white-40` | `text-static-white-40` | `border-static-white-40` |
-| Static White 20 | `bg-static-white-20` | `text-static-white-20` | `border-static-white-20` |
-| Static White 10 | `bg-static-white-10` | `text-static-white-10` | `border-static-white-10` |
-| Static White 4 | `bg-static-white-4` | `text-static-white-4` | `border-static-white-4` |
-
-### Background levels & primary colors
-| Class | Description |
-| --- | --- |
-| `bg-background-1/2/3/4/5/6` | Layered panels |
-| `bg-background` | Active theme background |
-| `bg/text/border-primary` | Primary color |
-| `bg/text/border-foreground` | Foreground color |
-| `bg/text/border-brand` | Brand colors |
-
-### Secondary palette (`bg- / text- / border-`)
-`purple`, `indigo`, `blue`, `cyan`, `mint`, `green`, `yellow`, `orange`, `red`
-
----
-
-## Gradients
 | Class | Description |
 | --- | --- |
 | `bg-gradient-primary` | Glass primary gradient |
-| `bg-gradient-gray` | Gray gradient |
-| `bg-gradient-black` | Black gradient |
-| `bg-gradient-purple` | Purple gradient |
-| `bg-gradient-indigo` | Indigo gradient |
-| `bg-gradient-blue` | Blue gradient |
-| `bg-gradient-cyan` | Cyan gradient |
-| `bg-gradient-mint` | Mint gradient |
-| `bg-gradient-green` | Green gradient |
-| `bg-gradient-yellow` | Yellow gradient |
-| `bg-gradient-orange` | Orange gradient |
-| `bg-gradient-red` | Red gradient |
+| `bg-gradient-gray` | Subtle neutral panel gradient |
+| `bg-gradient-black` | Deep static-black glass gradient |
+| `bg-gradient-{purple,indigo,blue,cyan,mint,green,yellow,orange,red}` | Secondary color glass gradients |
 
 ---
 
-## Shadows / Effects / Blur
+## 3. Visual Effects (Shadows & Backdrop Blur)
+
 | Class | Effect |
 | --- | --- |
-| `shadow-glass-1` | Multi-layer glass shadow with 1px border |
-| `shadow-glass-2` | Stronger glass shadow |
-| `shadow-glow` | Outer glow |
-| `shadow-focus` | Focus ring |
-| `shadow-inner` | Inner shadow |
-| `shadow-drop-1` | Soft drop shadow |
-| `shadow-drop-2` | Strong drop shadow |
-| `shadow-image-hover` | Inset image hover shadow |
-| `backdrop-blur-40` | Blur 20px |
-| `backdrop-blur-100` | Blur 50px |
+| `shadow-glass-1` | Light glass shadow + `1px` translucent white border + `8px` (`0.5rem`) backdrop blur |
+| `shadow-glass-2` | Elevated glass shadow + `1px` translucent white border + `20px` (`1.25rem`) backdrop blur |
+| `shadow-glow` | Dual black/white outer glow |
+| `shadow-focus` | `4px` (`0.25rem`) focus halo |
+| `shadow-inner` | Multi-layer inset highlight and depth shadow |
+| `shadow-drop-1` | Subtle `0.5px` drop shadow |
+| `shadow-drop-2` | Soft `2px / 4px` drop shadow |
+| `shadow-image-hover` | Top inset shadow for media hover overlays |
+| `shadow-none` | Removes box-shadow (`box-shadow: none`) |
+| `backdrop-blur-40` | Backdrop blur `20px` (`1.25rem`) |
+| `backdrop-blur-100` | Backdrop blur `50px` (`3.125rem`) |
 
 ---
 
-## Base layer (auto applied)
-- `:root` + `.theme-*` provide theme variables (SnowUI / iOS light & dark).
-- `@layer base` provides a responsive 14px–16px root size; rem-based component typography, Border, Size, Padding, Gap, and ordinary Radius tokens scale with it.
-- `@layer base` provides default `body / code` typography and colors, page-level native scrollbars, plus browser initialization for document flow, lists, media, form controls, and links.
-- Native `<a href>` elements not hosted by SnowUI `Frame` stay underlined by default and hide the underline on hover. Component links such as `Link` and `Button href` keep their own public state and are not overridden.
-- React / Next / common app roots use `#root`, `#__next`, or `#app`; other frameworks should mark the real application root with `[data-snowui-app-root]`. Body-level portals must remain outside that root.
-- Table, focus-visible, and disabled visuals are not globally overridden; SnowUI components own those surfaces and states.
-- Phosphor Duotone icons have background opacity forced to `0.08`.
+## 4. Borders & Radius
 
-**Usage**: import `snowui.css` once, then apply any classes above just like Tailwind utilities.
+### Border Radius (`rounded-*`)
+
+Value set: `0`, `4`, `8`, `12`, `16`, `20`, `24`, `28`, `32`, `40`, `48`, `80` (nominal px in rem).
+
+| Family | Classes | Notes |
+| --- | --- | --- |
+| All corners | `rounded-{0,4,8,12,16,20,24,28,32,40,48,80}` | Semantic aliases: `rounded-lg` (`8`), `rounded-xl` (`12`), `rounded-2xl` (`16`), `rounded-3xl` (`24`) |
+| Pill / Circle | `rounded-full` | `border-radius: 9999px; object-fit: cover` |
+| Single edge | `rounded-{t,r,b,l}-{0,4,8,12,16,20,24,28,32,40,48,80}` | Top, right, bottom, or left two corners |
+| Single corner | `rounded-{tl,tr,br,bl}-{0,4,8,12,16,20,24,28,32,40,48,80}` | Individual corner radius |
+
+### Border Width & Directional Black Borders
+
+| Family | Classes | Effect |
+| --- | --- | --- |
+| Border width | `border-0`, `border-0.5`, `border-1`, `border-2`, `border-4` | `0`, `0.5px`, `1px`, `2px`, `4px` (`solid` for non-zero widths) |
+| Directional Black | `border-{t,r,b,l}-black`, `border-{t,r,b,l}-black-{100,80,40,20,10,4}` | Single-side `0.5px` (`0.03125rem`) solid border on the Black scale |
+
+---
+
+## 5. Spacing (Padding, Margin, Gap)
+
+Nominal step scale: `0`, `4`, `8`, `12`, `16`, `20`, `24`, `28`, `40`, `48` (rem-based).
+
+| Family | Prefixes / Classes | Notes |
+| --- | --- | --- |
+| Padding | `p-*`, `px-*`, `py-*`, `pt-*`, `pr-*`, `pb-*`, `pl-*` | `p/px/py` also available in `snowui-responsive.css` |
+| Margin | `m-*`, `mx-*`, `my-*`, `mt-*`, `mr-*`, `mb-*`, `ml-*`, `m` | `m` is an alias for `m-4` (`4px`); static-only |
+| Gap | `gap-*` | Flex/Grid gap (`0`–`48`); included in responsive allowlist |
+
+---
+
+## 6. Sizing (`size-*`, `w-*`, `h-*`, `min-*`, `max-*`)
+
+Fixed nominal scale: `12`, `16`, `20`, `24`, `28`, `32`, `40`, `48`, `56`, `64`, `72`, `80` (rem-based).
+
+| Family | Classes | Description |
+| --- | --- | --- |
+| Square size | `size-{12,16,20,24,28,32,40,48,56,64,72,80}` | Sets equal `width` and `height` |
+| Fixed width / height | `w-{12..80}`, `h-{12..80}` | Explicit rem width or height |
+| Viewport & Container | `w-full` (`100%`), `h-full` (`100%`), `w-screen` (`100vw`), `h-screen` (`100vh`) | Percentage and viewport dimensions |
+| Intrinsic & Flex Fill | `w-hug` (`fit-content`), `h-hug` (`fit-content`), `w-fill` (`flex: 1; width: 100%`), `h-fill` (`flex: 1; height: 100%; align-self: stretch`) | Figma-aligned Hug / Fill layout helpers |
+| Min width / height | `min-w-0`, `min-h-0`, `min-w-{12..80}`, `min-h-{12..80}`, `min-w-screen`, `min-h-screen` | Minimum dimension constraints |
+| Max width / height (fixed) | `max-w-{12..80}`, `max-h-{12..80}` | Maximum rem dimensions |
+| Max width / height (`%`) | `max-w-{10,20,30,40,50,60,70,80,90,100}p`, `max-h-{10,20,30,40,50,60,70,80,90,100}p` | `10%` to `100%` maximum dimensions |
+
+---
+
+## 7. Layout
+
+| Group | Classes |
+| --- | --- |
+| Display | `block`, `inline-block`, `inline`, `flex`, `inline-flex`, `grid`, `inline-grid`, `hidden` |
+| Flex Direction & Wrap | `flex-row`, `flex-row-reverse`, `flex-col`, `flex-col-reverse` (each includes `display: flex`), `flex-wrap`, `flex-nowrap` |
+| Flex Item | `flex-1`, `flex-auto`, `flex-initial`, `flex-none`, `grow`, `grow-0`, `shrink`, `shrink-0` |
+| Grid Tracks | `grid-cols-{1..12}`, `grid-rows-{1..6}` |
+| Grid Span | `col-span-{1..12}`, `col-span-full`, `row-span-{1..6}`, `row-span-full` |
+| Justify & Align | `justify-{start,end,center,between,around,evenly}`, `items-{start,end,center,baseline,stretch}`, `self-{auto,start,end,center,stretch,baseline}` |
+| Position & Z-index | `relative`, `absolute`, `fixed`, `sticky`; `z-{0,10,20,30,40,50,100,auto}` |
+| Overflow & Whitespace | `overflow-{auto,hidden,visible,scroll}`, `overflow-x-{auto,hidden}`, `overflow-y-{auto,hidden}`, `whitespace-pre-wrap`, `whitespace-nowrap` |
+
+---
+
+## 8. Positioning Offsets
+
+Offset step scale: `0`, `4`, `8`, `12`, `16`, `20`, `24`, `28`, `40`, `48` (rem-based):
+- `top-{0,4,8,12,16,20,24,28,40,48}`
+- `right-{0,4,8,12,16,20,24,28,40,48}`
+- `bottom-{0,4,8,12,16,20,24,28,40,48}`
+- `left-{0,4,8,12,16,20,24,28,40,48}`
+
+---
+
+## 9. Typography
+
+| Class | Alias | Font Size / Line Height | `.paragraph` Bottom Margin |
+| --- | --- | --- | --- |
+| `text-12` | `text-xs` | `12px / 16px` (`0.75rem / 1rem`) | `text-12.paragraph` → `8px` |
+| `text-14` | `text-sm` | `14px / 20px` (`0.875rem / 1.25rem`) | `text-14.paragraph` → `10px` |
+| `text-16` | `text-base` | `16px / 24px` (`1rem / 1.5rem`) | `text-16.paragraph` → `12px` |
+| `text-18` | `text-lg` | `18px / 28px` (`1.125rem / 1.75rem`) | `text-18.paragraph` → `14px` |
+| `text-24` | `text-2xl` | `24px / 32px` (`1.5rem / 2rem`) | `text-24.paragraph` → `18px` |
+| `text-32` | `text-4xl` | `32px / 40px` (`2rem / 2.5rem`) | `text-32.paragraph` → `24px` |
+| `text-48` | `text-5xl` | `48px / 56px` (`3rem / 3.5rem`) | `text-48.paragraph` → `36px` |
+| `text-64` | — | `64px / 72px` (`4rem / 4.5rem`) | `text-64.paragraph` → `48px` |
+
+- **Font weight**: `font-regular` / `font-normal` (`400`), `font-semibold` (`600`)
+- **Transform & Tracking**: `uppercase` (`text-transform: uppercase`), `tracking-wide` (`letter-spacing: 0.05em`)
+
+---
+
+## 10. Interactivity, Opacity & Masks
+
+| Category | Classes | Description |
+| --- | --- | --- |
+| Cursor & Selection | `cursor-pointer`, `select-none` | Pointer cursor and disabled text selection |
+| Resize | `resize-none`, `resize-y`, `resize-x`, `resize` | Element resize axis controls |
+| Opacity | `opacity-{0,4,10,20,40,80,100}` | Opacity `0`, `0.04`, `0.1`, `0.2`, `0.4`, `0.8`, `1` |
+| Mask | `mask-fade-bottom` | Bottom linear-gradient fade mask (`--mask-height`, default `2em`) |
+
+---
+
+## Base Layer (`snowui-base.css`)
+
+- `:root` and `[theme="..."]` / `.theme-*` provide SnowUI and iOS light/dark theme tokens (`snowui-themes.css`).
+- `@layer base` sets `box-sizing: border-box`, a responsive `14px–16px` root font size (`clamp(14px, 0.875vw + 10px, 16px)`), default `body` / inline `code` typography, thin `Black/20%` native scrollbars, and document-flow resets for headings, lists, media, and form controls.
+- Plain `<a href>` elements outside `[data-snowui-frame]` default to `--black-40` with no underline, transition to `--black-100` on `:hover` / `:focus-visible`, and hide explicit underlines on hover; SnowUI `Link` and `Button href` retain their own component states.
+- `#root`, `#__next`, `#app`, and `[data-snowui-app-root]` establish `isolation: isolate`; body-level portals (`Dialog`, `Tooltip`, etc.) must mount outside that root so `backdrop-filter` can sample page content.
+- Phosphor Duotone background layers (`opacity="0.2"`) are normalized to `0.08`.
