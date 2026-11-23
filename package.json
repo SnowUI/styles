@@ -12,6 +12,7 @@
   "files": ["*.css", "README.md"],
   "scripts": {
     "generate:responsive": "node scripts/generate-responsive-utilities.mjs",
-    "check:responsive": "node scripts/generate-responsive-utilities.mjs --check"
+    "check:responsive": "node scripts/generate-responsive-utilities.mjs --check",
+    "sync:impact": "node scripts/sync-impact.mjs"
   }
 }

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "scope": "snowui-styles",
+  "language": "en",
+  "standaloneRepoOnly": true,
+  "updated": "2026-11-23",
+  "description": "Self-contained intra-repository linkage contracts for @snowui-design-system/styles when cloned standalone from GitHub.",
+  "standaloneAllowlist": [
+    "sync-manifest.json",
+    "scripts/sync-impact.mjs",
+    "README.md",
+    "CLAUDE.md",
+    "AGENTS.md",
+    ".gitignore"
+  ],
+  "coverageProbes": [
+    "snowui.css",
+    "snowui-themes.css",
+    "snowui-utilities.css",
+    "snowui-responsive.css",
+    "scripts/generate-responsive-utilities.mjs",
+    "package.json"
+  ],
+  "points": [
+    {
+      "id": "styles.utilities.css-and-usage-docs",
+      "title": "Utility & Responsive Stylesheets <-> Bilingual Usage Guides & Generator Sync",
+      "tier": "L-Gen",
+      "propagation": "immediate",
+      "triggers": [
+        "snowui-utilities.css",
+        "snowui-responsive.css",
+        "snowui-base.css",
+        "snowui.css",
+        "snowui-extra.css",
+        "scripts/generate-responsive-utilities.mjs",
+        "SNOWUI_USAGE.md",
+        "SNOWUI_USAGE.zh.md",
+        "package.json"
+      ],
+      "triggerSignal": "Added or updated static utilities, base rules, or responsive utility allowlist",
+      "companions": [
+        "SNOWUI_USAGE.md",
+        "SNOWUI_USAGE.zh.md",
+        "snowui-responsive.css"
+      ],
+      "exemptWhen": "Formatting-only edits in README.md",
+      "immediate": [
+        "Synchronize utility class tables in both SNOWUI_USAGE.md (English) and SNOWUI_USAGE.zh.md (Chinese)",
+        "Regenerate snowui-responsive.css via pnpm generate:responsive instead of editing generated rules by hand (keep within raw/gzip size budget)"
+      ],
+      "evaluated": [],
+      "mergeMain": [],
+      "acceptanceGate": [
+        "pnpm check:responsive"
+      ],
+      "authorityDoc": "SNOWUI_USAGE.md"
+    },
+    {
+      "id": "styles.themes.synced-tokens",
+      "title": "Theme Variables Entrypoint (snowui-themes.css) Integrity",
+      "tier": "L-Gen",
+      "propagation": "immediate",
+      "triggers": [
+        "snowui-themes.css"
+      ],
+      "triggerSignal": "Updated light/dark theme color or surface CSS custom properties",
+      "companions": [],
+      "exemptWhen": "Synced deterministically from upstream themes.css source",
+      "immediate": [
+        "Ensure light and dark theme token sets remain symmetric and snowui.css continues to import ./snowui-themes.css cleanly"
+      ],
+      "evaluated": [],
+      "mergeMain": [],
+      "acceptanceGate": [
+        "pnpm check:responsive"
+      ],
+      "authorityDoc": "README.md"
+    }
+  ]
+}
