@@ -12,7 +12,7 @@
 
 ## 1. 启动阅读链与一跳路由
 
-开始任何任务前，先完成 `[Project/AGENTS.md](../../AGENTS.md) → [snowui/AGENTS.md](../AGENTS.md) → 本文件`（独立检出缺少上层文件时先说明缺口并定位规则，不假称已读取），再按意图一跳直达：
+开始任何任务前，先完成 `[Project/AGENTS.md](../../AGENTS.md) → [snowui/AGENTS.md](../AGENTS.md) → 本文件` 并运行 `node ../../brain/bin/brain.mjs intake --project styles --q "<需求词>"`（收尾运行 `brain.mjs done --project snowui ...` 与 `brain.mjs impact snowui`；独立检出缺上层时先说明缺口），再按意图一跳直达：
 
 | 任务意图 | 本仓与共享权威落点 |
 | --- | --- |
@@ -24,6 +24,6 @@
 
 ## 2. 仓库职责与维护边界
 
-1. **主题单一来源**：主题与颜色变量的唯一 AI 可编辑源位于 `../components/src/styles/themes.css`；修改后须通过 `../components/scripts/sync-themes.mjs` 同步至本仓 [snowui-themes.css](snowui-themes.css) 与其他消费端，不单独修改本仓副本。
+1. **主题单一来源**：主题与颜色变量的唯一 AI 可编辑源位于 `../components/src/styles/themes.css`；修改后须通过 `../docs/scripts/sync-themes.mjs --write` 同步至本仓 [snowui-themes.css](snowui-themes.css) 与其他消费端，不单独修改本仓副本。
 2. **工具类与响应式同步**：新增或修改 [snowui-utilities.css](snowui-utilities.css) 工具类或响应式 allowlist 时，必须同步更新 [SNOWUI_USAGE.md](SNOWUI_USAGE.md) 与 [SNOWUI_USAGE.zh.md](SNOWUI_USAGE.zh.md)，并运行纯生成命令 `pnpm generate:responsive` 更新 [snowui-responsive.css](snowui-responsive.css)（预算上限 `44,000 B` raw / `5,250 B` gzip）。
 3. **公开交付与验收纪律**：[README.md](README.md) 保持简洁英文且不含本机私有路径或更新日志；校验与测试命令（如 `pnpm check:responsive` 及工作区检查脚本）遵守上层验收门禁，仅在 Owner 发出验收指令后执行。
