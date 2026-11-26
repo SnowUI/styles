@@ -1,6 +1,14 @@
 {
   "name": "@snowui-design-system/styles",
   "version": "0.1.0",
+  "homepage": "https://snowui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SnowUI/styles.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SnowUI/styles/issues"
+  },
   "exports": {
     ".":            "./snowui.css",
     "./themes":     "./snowui-themes.css",
